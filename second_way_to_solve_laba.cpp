@@ -19,19 +19,7 @@ int bin_search(std::vector<int>& arr, int low, int high, int target)
 }
 
 /*
-Тест:
-4
-2 2 6 8
-5 4 9 10
-4 0 11 6
-8 2 12 12
-6
-2 2
-12 12
-10 4
-5 5
-2 10
-2 8
+
 */
 
 int main()
@@ -88,6 +76,7 @@ int main()
     // обрабатываем запросы
     int questions = 0;
     std::cin >> questions;
+    std::vector<int> answer;
     for (int i = 0; i < questions; ++i)
     {
         int x, y;
@@ -100,7 +89,13 @@ int main()
         int index_row = bin_search(y_vector, 0, y_vector.size() - 1, y);
         int index_column = bin_search(x_vector, 0, x_vector.size() - 1, x);
 
-        std::cout << "Answer: " << matrix[index_row][index_column] << "\n";
+        answer.push_back(matrix[index_row][index_column]);
+    }
+
+    std::cout << "Answers: ";
+    for (int i = 0; i < answer.size(); ++i)
+    {
+        std::cout << answer[i] << " ";
     }
 
     return 0;
