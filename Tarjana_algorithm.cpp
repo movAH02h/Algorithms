@@ -29,7 +29,7 @@ void dfs(int vertex, std::vector<std::vector<int>> edges, std::vector<int>& ids,
             int node = st.top();
             st.pop();
             onStack[node] = false;
-            lows[node] = ids[vertex];
+            lows[node] = ids[vertex]; // надо ли это делать - сомнительно, так как при вызоде из dfs мы уже проставили min для вершин. Но лишним не будет
             if (node == vertex) break;
         }
         countSCC++;
