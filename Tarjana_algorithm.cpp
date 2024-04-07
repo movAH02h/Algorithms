@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-
+// https://yandex.ru/video/preview/7857507657907487533 - СЃСЃС‹Р»РєР° СЃ РѕР±СЉСЏСЃРЅРµРЅРёРµРј
 int id = 0;
 int countSCC = 0;
 
@@ -29,7 +29,7 @@ void dfs(int vertex, std::vector<std::vector<int>> edges, std::vector<int>& ids,
             int node = st.top();
             st.pop();
             onStack[node] = false;
-            lows[node] = ids[vertex];
+            lows[node] = ids[vertex]; // РЅР°РґРѕ Р»Рё СЌС‚Рѕ РґРµР»Р°С‚СЊ - СЃРѕРјРЅРёС‚РµР»СЊРЅРѕ, С‚Р°Рє РєР°Рє РїСЂРё РІС‹Р·РѕРґРµ РёР· dfs РјС‹ СѓР¶Рµ РїСЂРѕСЃС‚Р°РІРёР»Рё min РґР»СЏ РІРµСЂС€РёРЅ. РќРѕ Р»РёС€РЅРёРј РЅРµ Р±СѓРґРµС‚
             if (node == vertex) break;
         }
         countSCC++;
@@ -53,9 +53,9 @@ int main()
         edges[in - 1].push_back(to - 1);
     }
 
-    std::vector<int> ids(v, -1); // для записи идентификатора каждого узла
+    std::vector<int> ids(v, -1); // Г¤Г«Гї Г§Г ГЇГЁГ±ГЁ ГЁГ¤ГҐГ­ГІГЁГґГЁГЄГ ГІГ®Г°Г  ГЄГ Г¦Г¤Г®ГЈГ® ГіГ§Г«Г 
 
-    // для записи наименьшего индекса (чтобы можно было понять, что вершины к одной SCC относятся)
+    // Г¤Г«Гї Г§Г ГЇГЁГ±ГЁ Г­Г ГЁГ¬ГҐГ­ГјГёГҐГЈГ® ГЁГ­Г¤ГҐГЄГ±Г  (Г·ГІГ®ГЎГ» Г¬Г®Г¦Г­Г® ГЎГ»Г«Г® ГЇГ®Г­ГїГІГј, Г·ГІГ® ГўГҐГ°ГёГЁГ­Г» ГЄ Г®Г¤Г­Г®Г© SCC Г®ГІГ­Г®Г±ГїГІГ±Гї)
     std::vector<int> lows(v);
     std::vector<bool> onStack(v, false);
     std::stack<int> st;
