@@ -249,9 +249,9 @@ int main()
             rectangles.push_back(Rectangle(10 * j, 10 * j, 10 * (2 * number_rect - j),  10 * (2 * number_rect - j)));
         }
 
-        for (int i = 0; i < number_points; ++i)
+        for (int k = 0; k < number_points; ++k)
         {
-            points.push_back(Point(modexp(1223 * i, 31, 20 * number_points), modexp(2111 * i, 31, 20 * number_points)));
+            points.push_back(Point(modexp(1223 * k, 31, 20 * number_points), modexp(2111 * k, 31, 20 * number_points)));
         }
 
         std::vector<int> compress_x;
@@ -267,18 +267,18 @@ int main()
         auto start = std::chrono::steady_clock::now();
         if (tree_versions.size())
         {
-            for (size_t i = 0; i < points.size(); ++i)
+            for (size_t p = 0; p < points.size(); ++p)
             {
-                int x_id = bin_search(compress_x, points[i].x);
-                int y_id = bin_search(compress_y, points[i].y);
+                int x_id = bin_search(compress_x, points[p].x);
+                int y_id = bin_search(compress_y, points[p].y);
 
                 if (x_id == -1 || y_id == -1)
                 {
-                    answer[i] = 0;
+                    answer[p] = 0;
                 }
                 else
                 {
-                    answer[i] = get_answer(tree_versions[x_id], y_id);
+                    answer[p] = get_answer(tree_versions[x_id], y_id);
                 }
             }
         }
