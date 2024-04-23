@@ -5,47 +5,71 @@ bool check_in_rect(int x1, int y1, int x2, int y2, int x, int y)
     return (x >= x1 && x < x2 && y < y2 && y >= y1) == 1 ? true : false;
 }
 
+int modexp(long long int x, long long int y, long long int N)
+{
+    if (y == 0) return 1;
+    long long int z = modexp(x % N, y / 2, N) % N;
+    if (y % 2 == 0)
+        return (z * z) % N;
+    else
+        return ((x % N) * ((z * z) % N)) % N;
+}
+
+int binpow (int a, int n) {
+	int res = 1;
+	while (n)
+		if (n & 1) {
+			res *= a;
+			--n;
+		}
+		else {
+			a *= a;
+			n >>= 1;
+		}
+	return res;
+}
+
 int main()
 {
     std::vector<std::pair<std::pair<int,int>, std::pair<int,int>>> rectangles;
+    int number_points = 10000;
 
-    int number_rect = 0;
-    std::cin >> number_rect;
-
-    for (int i = 0; i < number_rect; ++i)
+    for (int i = 0; i < 13; ++i)
     {
-        // x1 and y1 - лева€ нижн€€ точка, x2 and y2 - права€ верхн€€ точка
-        int x1,y1,x2,y2;
-        std::cin >> x1 >> y1 >> x2 >> y2;
-        rectangles.push_back({{x1, y1}, {x2, y2}});
-    }
+        int number_rect = binpow(2, i);
 
-
-    int queries = 0;
-    std::cin >> queries;
-
-    for (int i = 0; i < queries; ++i)
-    {
-        int answer = 0;
-        int dot_x, dot_y;
-        std::cin >> dot_x >> dot_y;
-
-        for (int i = 0; i < rectangles.size(); ++i)
+        for (int j = 0; j < number_rect; ++j)
         {
-            bool check_result = check_in_rect(rectangles[i].first.first,
-                                              rectangles[i].first.second,
-                                              rectangles[i].second.first,
-                                              rectangles[i].second.second,
-                                              dot_x,
-                                              dot_y);
-            if (check_result)
-            {
-                answer++;
-            }
+            rectangles.push_back({{10 * j, 10 * j}, {10 * (2 * number_rect - j), 10 * (2 * number_rect - j)}});
         }
 
-        std::cout << "Dot ( " << dot_x << ", " << dot_y << " ) in " << answer << " rectangles\n";
+        auto start = std::chrono::steady_clock::now();
+        for (int p = 0; p < number_points; ++p)
+        {
+            int answer = 0;
+
+            int dot_x = modexp(1223 * p, 31, 20 * number_points);
+            int dot_y = modexp(2111 * p, 31, 20 * number_points);
+
+
+            for (int r = 0; r < rectangles.size(); ++r)
+            {
+                bool check_result = check_in_rect(rectangles[r].first.first,
+                                                  rectangles[r].first.second,
+                                                  rectangles[r].second.first,
+                                                  rectangles[r].second.second,
+                                                  dot_x,
+                                                  dot_y);
+                if (check_result)
+                {
+                    answer++;
+                }
+            }
+        }
+        auto _end = std::chrono::steady_clock::now();
+
+        std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(_end - start).count() << "\n";
     }
+
     return 0;
 }
-
