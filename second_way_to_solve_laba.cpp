@@ -50,6 +50,7 @@ int main()
 
     for (int i = 0; i < 11; ++i)
     {
+	auto start = std::chrono::steady_clock::now();
         int number_rect = binpow(2, i);
 
         for (int j = 0; j < number_rect; ++j)
@@ -71,7 +72,7 @@ int main()
         std::vector<int> y_vector(y_set.begin(), y_set.end());
 
         std::vector<std::vector<int>> matrix(y_vector.size(), std::vector<int>(x_vector.size(), 0));
-        auto start = std::chrono::steady_clock::now();
+        
 
         for (int r = 0; r < rectangles.size(); ++r)
         {
