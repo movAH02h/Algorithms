@@ -34,7 +34,7 @@ int main()
     std::vector<std::pair<std::pair<int,int>, std::pair<int,int>>> rectangles;
     int number_points = 10000;
 
-    for (int i = 0; i < 13; ++i)
+    for (int i = 0; i < 11; ++i)
     {
         int number_rect = binpow(2, i);
 
