@@ -36,6 +36,7 @@ int main()
 
     for (int i = 0; i < 11; ++i)
     {
+	auto start = std::chrono::steady_clock::now();
         int number_rect = binpow(2, i);
 
         for (int j = 0; j < number_rect; ++j)
@@ -43,7 +44,7 @@ int main()
             rectangles.push_back({{10 * j, 10 * j}, {10 * (2 * number_rect - j), 10 * (2 * number_rect - j)}});
         }
 
-        auto start = std::chrono::steady_clock::now();
+        
         for (int p = 0; p < number_points; ++p)
         {
             int answer = 0;
