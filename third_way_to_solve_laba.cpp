@@ -1,8 +1,6 @@
 #include <bits/stdc++.h>
 
 // ----------------------------------------------- Lava third method -------------------------------------------------------------
-
-
 class Action
 {
 public:
@@ -62,7 +60,26 @@ typedef struct Node
     }
 } Node;
 
+int hash_point(int simple_seed, int index, int number_points)
+{
+    int answer = 1;
+    for (int i = 0; i < 31; ++i)
+    {
+        answer *= (simple_seed * index) % (20 * number_points);
+    }
 
+    return answer;
+}
+
+int modexp(long long int x, long long int y, long long int N)
+{
+    if (y == 0) return 1;
+    long long int z = modexp(x % N, y / 2, N) % N;
+    if (y % 2 == 0)
+        return (z * z) % N;
+    else
+        return ((x % N) * ((z * z) % N)) % N;
+}
 
 int bin_search(std::vector<int>& v, int target)
 {
@@ -159,6 +176,20 @@ void make_persistant_tree(std::vector<Node*>& tree_versions, std::vector<Rectang
     }
 }
 
+int binpow (int a, int n) {
+	int res = 1;
+	while (n)
+		if (n & 1) {
+			res *= a;
+			--n;
+		}
+		else {
+			a *= a;
+			n >>= 1;
+		}
+	return res;
+}
+
 
 int get_answer(Node* node, int target)
 {
@@ -204,58 +235,56 @@ void compress_coordinates(std::vector<int>& compress_x, std::vector<int>& compre
 
 int main()
 {
-    int number_rect; std::cin >> number_rect;
     std::vector<Rectangle> rectangles;
-
-    for (int i = 0; i < number_rect; ++i)
-    {
-        int x1, y1, x2, y2;
-        std::cin >> x1 >> y1 >> x2 >> y2;
-        rectangles.push_back(Rectangle(x1, y1, x2, y2));
-    }
-
-    int number_points; std::cin >> number_points;
     std::vector<Point> points;
+    const int number_points = 9000;
 
-    for (int i = 0; i < number_points; ++i)
+    // 13 наборов данных - меняем кол-во прямоугольников с шагом x2
+    for (int i = 0; i < 13; ++i)
     {
-        int x, y;
-        std::cin >> x >> y;
-        points.push_back(Point(x, y));
-    }
+        int number_rect = binpow(2, i);
 
-    std::vector<int> compress_x;
-    std::vector<int> compress_y;
-
-    compress_coordinates(compress_x, compress_y, rectangles);
-
-    std::vector<Node*> tree_versions;
-    make_persistant_tree(tree_versions, rectangles, compress_x, compress_y);
-
-    std::vector<int> answer(points.size());
-
-    if (tree_versions.size())
-    {
-        for (size_t i = 0; i < points.size(); ++i)
+        for (int j = 0; j < number_rect; ++j)
         {
-            int x_id = bin_search(compress_x, points[i].x);
-            int y_id = bin_search(compress_y, points[i].y);
+            rectangles.push_back(Rectangle(10 * j, 10 * j, 10 * (2 * number_rect - j),  10 * (2 * number_rect - j)));
+        }
 
-            if (x_id == -1 || y_id == -1)
+        for (int i = 0; i < number_points; ++i)
+        {
+            points.push_back(Point(modexp(1223 * i, 31, 20 * number_points), modexp(2111 * i, 31, 20 * number_points)));
+        }
+
+        std::vector<int> compress_x;
+        std::vector<int> compress_y;
+
+        compress_coordinates(compress_x, compress_y, rectangles);
+
+        std::vector<Node*> tree_versions;
+        make_persistant_tree(tree_versions, rectangles, compress_x, compress_y);
+
+        std::vector<int> answer(points.size());
+
+        auto start = std::chrono::steady_clock::now();
+        if (tree_versions.size())
+        {
+            for (size_t i = 0; i < points.size(); ++i)
             {
-                answer[i] = 0;
-            }
-            else
-            {
-                answer[i] = get_answer(tree_versions[x_id], y_id);
+                int x_id = bin_search(compress_x, points[i].x);
+                int y_id = bin_search(compress_y, points[i].y);
+
+                if (x_id == -1 || y_id == -1)
+                {
+                    answer[i] = 0;
+                }
+                else
+                {
+                    answer[i] = get_answer(tree_versions[x_id], y_id);
+                }
             }
         }
-    }
+        auto _end = std::chrono::steady_clock::now();
 
-
-    for (int element : answer)
-    {
-        std::cout << element << " ";
+        std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(_end - start).count() << "\n";
     }
 
     return 0;
