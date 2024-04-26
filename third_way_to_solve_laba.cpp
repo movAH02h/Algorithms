@@ -60,17 +60,6 @@ typedef struct Node
     }
 } Node;
 
-int hash_point(int simple_seed, int index, int number_points)
-{
-    int answer = 1;
-    for (int i = 0; i < 31; ++i)
-    {
-        answer *= (simple_seed * index) % (20 * number_points);
-    }
-
-    return answer;
-}
-
 int modexp(long long int x, long long int y, long long int N)
 {
     if (y == 0) return 1;
@@ -100,8 +89,6 @@ int bin_search(std::vector<int>& v, int target)
 
     return left - 1;
 }
-
-
 
 Node* insert_node(Node* node, int _start, int _end, int value)
 {
@@ -239,9 +226,9 @@ int main()
     std::vector<Point> points;
     const int number_points = 9000;
 
-    // 13 наборов данных - меняем кол-во прямоугольников с шагом x2
-    for (int i = 0; i < 13; ++i)
+    for (int i = 0; i < 11; ++i)
     {
+	auto start = std::chrono::steady_clock::now();
         int number_rect = binpow(2, i);
 
         for (int j = 0; j < number_rect; ++j)
@@ -264,7 +251,6 @@ int main()
 
         std::vector<int> answer(points.size());
 
-        auto start = std::chrono::steady_clock::now();
         if (tree_versions.size())
         {
             for (size_t p = 0; p < points.size(); ++p)
